@@ -5,7 +5,7 @@ export default function App() {
   const [opened, setOpened] = useState(false);
   const noBtnRef = useRef(null);
 
-  // 🔥 NO button runs anywhere on screen
+  // 😈 NO button runs anywhere on screen
   const moveNoButton = () => {
     const noBtn = noBtnRef.current;
     if (!noBtn) return;
@@ -13,14 +13,12 @@ export default function App() {
     const btnWidth = noBtn.offsetWidth;
     const btnHeight = noBtn.offsetHeight;
 
-    // viewport size
     const maxX = window.innerWidth - btnWidth - 20;
     const maxY = window.innerHeight - btnHeight - 20;
 
     const randomX = Math.random() * maxX;
     const randomY = Math.random() * maxY;
 
-    // make button absolute so it can run everywhere
     noBtn.style.position = "fixed";
     noBtn.style.left = `${randomX}px`;
     noBtn.style.top = `${randomY}px`;
@@ -28,9 +26,17 @@ export default function App() {
 
   return (
     <div className="container">
+
+      {/* 💖 Floating Hearts */}
+      <div className="hearts">
+        {Array.from({ length: 20 }).map((_, i) => (
+          <span key={i}>💗</span>
+        ))}
+      </div>
+
       {!opened && (
         <button className="startBtn" onClick={() => setOpened(true)}>
-          Click Here 💖
+          Click Here ✨💖
         </button>
       )}
 
