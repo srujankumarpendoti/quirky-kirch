@@ -92,3 +92,14 @@ body {
   transition:all 0.35s cubic-bezier(.17,.67,.35,1.5);
   touch-action:none; /* 🔥 important for mobile */
 }
+
+button {
+  outline: none;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus {
+  outline: none;
+}
+
