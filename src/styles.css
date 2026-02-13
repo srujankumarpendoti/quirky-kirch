@@ -93,13 +93,12 @@ body {
   touch-action:none; /* 🔥 important for mobile */
 }
 
+
 button {
   outline: none;
-  border: none;
   -webkit-tap-highlight-color: transparent;
 }
 
 button:focus {
   outline: none;
 }
-
