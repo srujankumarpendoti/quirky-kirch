@@ -4,62 +4,28 @@ import "./styles.css";
 export default function App() {
   const [opened, setOpened] = useState(false);
   const noBtnRef = useRef(null);
+  const yesBtnRef = useRef(null);
 
-  // 🔥 Move button away from cursor/finger
-  const moveAway = (clientX, clientY) => {
-    const btn = noBtnRef.current;
-    const container = document.querySelector(".container");
+  // 🔥 FIXED — Move NO button near YES (mobile safe)
+  const handleNoHover = () => {
+    const noBtn = noBtnRef.current;
+    const yesBtn = yesBtnRef.current;
 
-    if (!btn || !container) return;
+    if (!noBtn || !yesBtn) return;
 
-    const rect = container.getBoundingClientRect();
-    const btnRect = btn.getBoundingClientRect();
+    // parent container position
+    const parentRect = noBtn.parentElement.getBoundingClientRect();
+    const yesRect = yesBtn.getBoundingClientRect();
 
-    // button center
-    const btnCenterX = btnRect.left + btnRect.width / 2;
-    const btnCenterY = btnRect.top + btnRect.height / 2;
+    // calculate relative movement INSIDE parent
+    const x = yesRect.left - parentRect.left - 20;
+    const y = yesRect.top - parentRect.top - 10;
 
-    // 🔥 DISTANCE CHECK (important fix)
-    const distX = btnCenterX - clientX;
-    const distY = btnCenterY - clientY;
-    const distance = Math.sqrt(distX * distX + distY * distY);
-
-    // 👉 only escape when mouse is CLOSE (120px range)
-    if (distance > 120) return;
-
-    // direction away from cursor
-    let dx = distX / distance;
-    let dy = distY / distance;
-
-    const moveDistance = 140;
-
-    let newX = btn.offsetLeft + dx * moveDistance;
-    let newY = btn.offsetTop + dy * moveDistance;
-
-    newX = Math.max(0, Math.min(rect.width - btnRect.width, newX));
-    newY = Math.max(0, Math.min(rect.height - btnRect.height, newY));
-
-    btn.style.left = `${newX}px`;
-    btn.style.top = `${newY}px`;
-  };
-
-  // 💻 PC
-  const handleMouseMove = (e) => {
-    moveAway(e.clientX, e.clientY);
-  };
-
-  // 📱 Mobile
-  const handleTouchMove = (e) => {
-    const touch = e.touches[0];
-    moveAway(touch.clientX, touch.clientY);
+    noBtn.style.transform = `translate(${x}px, ${y}px) scale(0.9)`;
   };
 
   return (
-    <div
-      className="container"
-      onMouseMove={opened ? handleMouseMove : null}
-      onTouchMove={opened ? handleTouchMove : null}
-    >
+    <div className="container">
       {!opened && (
         <button className="startBtn" onClick={() => setOpened(true)}>
           Click Here 💖
@@ -71,9 +37,16 @@ export default function App() {
           <h1 className="text">Will you marry me ? 💍</h1>
 
           <div className="btnRow">
-            <button className="yesBtn">YES 😍</button>
+            <button ref={yesBtnRef} className="yesBtn">
+              YES 😍
+            </button>
 
-            <button ref={noBtnRef} className="noBtn">
+            <button
+              ref={noBtnRef}
+              className="noBtn"
+              onMouseEnter={handleNoHover}
+              onTouchStart={handleNoHover} // 📱 mobile support added
+            >
               NO 😅
             </button>
           </div>
