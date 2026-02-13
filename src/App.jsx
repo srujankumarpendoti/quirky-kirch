@@ -5,7 +5,7 @@ export default function App() {
   const [opened, setOpened] = useState(false);
   const noBtnRef = useRef(null);
 
-  // 🔥 ADVANCED ESCAPE LOGIC
+  // 🔥 Move button away from cursor/finger
   const moveAway = (clientX, clientY) => {
     const btn = noBtnRef.current;
     const container = document.querySelector(".container");
@@ -19,23 +19,23 @@ export default function App() {
     const btnCenterX = btnRect.left + btnRect.width / 2;
     const btnCenterY = btnRect.top + btnRect.height / 2;
 
-    // direction vector (away from finger/mouse)
-    let dx = btnCenterX - clientX;
-    let dy = btnCenterY - clientY;
+    // 🔥 DISTANCE CHECK (important fix)
+    const distX = btnCenterX - clientX;
+    const distY = btnCenterY - clientY;
+    const distance = Math.sqrt(distX * distX + distY * distY);
 
-    const length = Math.sqrt(dx * dx + dy * dy) || 1;
+    // 👉 only escape when mouse is CLOSE (120px range)
+    if (distance > 120) return;
 
-    // normalize direction
-    dx = dx / length;
-    dy = dy / length;
+    // direction away from cursor
+    let dx = distX / distance;
+    let dy = distY / distance;
 
-    // distance to move
-    const distance = 120;
+    const moveDistance = 140;
 
-    let newX = btn.offsetLeft + dx * distance;
-    let newY = btn.offsetTop + dy * distance;
+    let newX = btn.offsetLeft + dx * moveDistance;
+    let newY = btn.offsetTop + dy * moveDistance;
 
-    // keep inside screen bounds
     newX = Math.max(0, Math.min(rect.width - btnRect.width, newX));
     newY = Math.max(0, Math.min(rect.height - btnRect.height, newY));
 
@@ -43,12 +43,12 @@ export default function App() {
     btn.style.top = `${newY}px`;
   };
 
-  // Desktop mouse move
+  // 💻 PC
   const handleMouseMove = (e) => {
     moveAway(e.clientX, e.clientY);
   };
 
-  // Mobile touch move
+  // 📱 Mobile
   const handleTouchMove = (e) => {
     const touch = e.touches[0];
     moveAway(touch.clientX, touch.clientY);
@@ -73,7 +73,6 @@ export default function App() {
           <div className="btnRow">
             <button className="yesBtn">YES 😍</button>
 
-            {/* 🔥 ESCAPING BUTTON */}
             <button ref={noBtnRef} className="noBtn">
               NO 😅
             </button>
