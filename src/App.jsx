@@ -1,26 +1,23 @@
 import { useState, useRef } from "react";
 import "./styles.css";
 
-export default function App() {
-  const [opened, setOpened] = useState(false);
-  const noBtnRef = useRef(null);
-  const yesBtnRef = useRef(null);
-
-  // 🔥 FIXED — Move NO button near YES (mobile safe)
-  const handleNoHover = () => {
+const handleNoHover = () => {
   const noBtn = noBtnRef.current;
-  const yesBtn = yesBtnRef.current;
+  const container = noBtn.parentElement;
 
-  if (!noBtn || !yesBtn) return;
+  if (!noBtn || !container) return;
 
-  const yesRect = yesBtn.getBoundingClientRect();
-  const noRect = noBtn.getBoundingClientRect();
+  const containerRect = container.getBoundingClientRect();
+  const btnRect = noBtn.getBoundingClientRect();
 
-  // 🔥 Calculate relative move instead of full screen jump
-  const moveX = yesRect.left - noRect.left;
-  const moveY = yesRect.top - noRect.top;
+  // 🔥 Random position inside button row
+  const maxX = containerRect.width - btnRect.width;
+  const maxY = containerRect.height - btnRect.height;
 
-  noBtn.style.transform = `translate(${moveX}px, ${moveY}px) scale(0.9)`;
+  const randomX = Math.random() * maxX - btnRect.width / 2;
+  const randomY = Math.random() * maxY - btnRect.height / 2;
+
+  noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
 };
 
   return (
