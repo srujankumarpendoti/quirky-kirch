@@ -8,21 +8,20 @@ export default function App() {
 
   // 🔥 FIXED — Move NO button near YES (mobile safe)
   const handleNoHover = () => {
-    const noBtn = noBtnRef.current;
-    const yesBtn = yesBtnRef.current;
+  const noBtn = noBtnRef.current;
+  const yesBtn = yesBtnRef.current;
 
-    if (!noBtn || !yesBtn) return;
+  if (!noBtn || !yesBtn) return;
 
-    // parent container position
-    const parentRect = noBtn.parentElement.getBoundingClientRect();
-    const yesRect = yesBtn.getBoundingClientRect();
+  const yesRect = yesBtn.getBoundingClientRect();
+  const noRect = noBtn.getBoundingClientRect();
 
-    // calculate relative movement INSIDE parent
-    const x = yesRect.left - parentRect.left - 20;
-    const y = yesRect.top - parentRect.top - 10;
+  // 🔥 Calculate relative move instead of full screen jump
+  const moveX = yesRect.left - noRect.left;
+  const moveY = yesRect.top - noRect.top;
 
-    noBtn.style.transform = `translate(${x}px, ${y}px) scale(0.9)`;
-  };
+  noBtn.style.transform = `translate(${moveX}px, ${moveY}px) scale(0.9)`;
+};
 
   return (
     <div className="container">
@@ -42,13 +41,13 @@ export default function App() {
             </button>
 
             <button
-              ref={noBtnRef}
-              className="noBtn"
-              onMouseEnter={handleNoHover}
-              onTouchStart={handleNoHover} // 📱 mobile support added
-            >
-              NO 😅
-            </button>
+  ref={noBtnRef}
+  className="noBtn"
+  onMouseEnter={handleNoHover}
+  onTouchStart={handleNoHover}
+>
+  NO 😅
+</button>
           </div>
         </div>
       )}
